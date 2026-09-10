@@ -176,7 +176,7 @@ const personData: Record<string, PersonData> = {
       { year: 1968, age: 23, title: '成家', description: '与本村张氏成婚。' },
       { year: 1970, age: 25, title: '长子出生', description: '长子陈志远出生。' },
       { year: 1972, age: 27, title: '次子出生', description: '次子陈志高出生。' },
-      { year: 1975, age: 30, title: '三子出生', description: '三子陈志远出生。' },
+      { year: 1975, age: 30, title: '三子出生', description: '三子陈志强出生。' },
       { year: 1978, age: 33, title: '带领兄弟外出', description: '带领兄弟们一起外出务工，改善家庭生活。' },
       { year: 1985, age: 40, title: '回乡照顾父母', description: '逐渐回乡，照顾年迈的父母。' },
       { year: 1995, age: 50, title: '含饴弄孙', description: '开始照顾孙辈，享受天伦之乐。' },
