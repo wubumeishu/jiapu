@@ -58,10 +58,10 @@
             :height="NODE_HEIGHT"
             class="node-foreign"
           >
-            <div 
-              class="node-card" 
+            <div
+              class="node-card"
               :class="{ selected: selectedNode?.id === node.id }"
-              @click="selectNode(node)"
+              @click="navigateToPerson(node.id)"
             >
               <div class="node-avatar">
                 {{ node.gender === 'male' ? '👤' : '👩' }}
@@ -76,6 +76,12 @@
                 {{ collapsedNodes.has(node.id) ? '+' : '-' }}
               </button>
             </div>
+            <!-- 点击节点卡片进入人物详情页 -->
+            <a
+              :href="`/surname/${slug}/genealogy/${genealogyId}/member/${node.id}`"
+              class="memorial-link"
+              @click.stop
+            ></a>
           </foreignObject>
         </g>
       </svg>
@@ -107,12 +113,17 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { 
-  chenGenealogyPersons, 
+import { useRoute, useRouter } from 'vue-router'
+import {
+  chenGenealogyPersons,
   chenGenealogyRelationships,
-  getChildren,
-  getParent 
+  getParent
 } from '@/data/chenGenealogyTest'
+
+const route = useRoute()
+const router = useRouter()
+const genealogyId = route.params.id as string
+const slug = route.params.slug as string
 
 // 配置
 const NODE_WIDTH = 100
@@ -373,11 +384,9 @@ function toggleNode(personId: string) {
   collapsedNodes.value = newSet
 }
 
-// 点击节点详情
-function selectNode(node: any) {
-  selectedNode.value = node
-  selectedParent.value = getParent(node.id)
-  selectedChildren.value = getChildren(node.id)
+// 点击节点进入人物详情页
+function navigateToPerson(nodeId: string) {
+  router.push(`/surname/${slug}/genealogy/${genealogyId}/member/${nodeId}`)
 }
 
 // 展开全部
