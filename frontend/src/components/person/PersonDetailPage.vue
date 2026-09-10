@@ -11,6 +11,7 @@
           </svg>
           返回{{ surnameData?.name || '家谱' }}
         </button>
+        <span class="demo-badge">示例人物 · 演示资料</span>
       </div>
     </div>
 
@@ -211,9 +212,9 @@
                 <span v-else class="memory-emoji">🏺</span>
               </div>
               <div class="memory-caption">
+                <div class="caption-meta">{{ memory.date || '' }}</div>
                 <div class="caption-title">{{ memory.title }}</div>
                 <div class="caption-desc">{{ memory.description }}</div>
-                <div v-if="memory.date" class="caption-date">{{ memory.date }}</div>
               </div>
             </div>
             <div v-if="!person?.memories?.length" class="empty-memories">
@@ -412,6 +413,19 @@ onUnmounted(() => {
 .back-link:hover {
   color: #8D6E63;
   border-bottom-color: #8D6E63;
+}
+
+.demo-badge {
+  display: inline-block;
+  margin-left: 16px;
+  padding: 2px 10px;
+  background-color: #F5F0E8;
+  border: 1px solid #E0D6C8;
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  color: #B8A898;
+  letter-spacing: 1px;
+  vertical-align: middle;
 }
 
 /* ========== Hero 档案封面 ========== */
@@ -915,6 +929,13 @@ onUnmounted(() => {
   padding: 14px 16px;
 }
 
+.caption-meta {
+  font-size: 0.75rem;
+  color: #B8A898;
+  margin-bottom: 4px;
+  letter-spacing: 1px;
+}
+
 .caption-title {
   font-family: 'Noto Serif SC', serif;
   font-size: 0.9375rem;
@@ -927,12 +948,6 @@ onUnmounted(() => {
   font-size: 0.8125rem;
   color: #6B5B4F;
   line-height: 1.6;
-  margin-bottom: 8px;
-}
-
-.caption-date {
-  font-size: 0.75rem;
-  color: #B8A898;
 }
 
 .empty-memories {
