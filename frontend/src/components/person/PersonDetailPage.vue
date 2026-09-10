@@ -1,12 +1,12 @@
 <template>
-  <div class="person-detail-page">
+  <div class="person-archive">
     <NavBar />
 
-    <!-- 返回按钮 -->
-    <div class="back-bar">
+    <!-- 顶部返回 -->
+    <div class="top-bar">
       <div class="content-width">
-        <button class="back-btn" @click="goBack">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="back-link" @click="goBack">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
           返回{{ surnameData?.name || '家谱' }}
@@ -14,179 +14,159 @@
       </div>
     </div>
 
-    <!-- Hero 人物身份区域 -->
-    <section class="person-hero" v-if="person">
+    <!-- 第一幕：认识他 -->
+    <!-- Hero 档案封面 -->
+    <section class="archive-hero" v-if="person">
       <div class="content-width hero-inner">
-        <div class="hero-avatar">
-          <div class="avatar-circle" :class="person.gender">
-            {{ person.name.charAt(0) }}
+        <div class="hero-photo">
+          <div class="photo-frame">
+            <div class="photo-placeholder">
+              <span class="photo-label">{{ person.name }}</span>
+              <span class="photo-year">{{ person.birthYear }}—{{ person.deathYear || '今' }}</span>
+            </div>
           </div>
         </div>
-        <div class="hero-info">
+        <div class="hero-text">
           <h1 class="hero-name">{{ person.name }}</h1>
-          <div class="hero-years">
-            <span>{{ person.birthYear }} — {{ person.deathYear || '今' }}</span>
-            <span class="generation-tag">第{{ person.generation }}代</span>
+          <div class="hero-line"></div>
+          <div class="hero-meta">
+            <span class="meta-item">{{ person.birthYear }} — {{ person.deathYear || '今' }}</span>
+            <span class="meta-sep">·</span>
+            <span class="meta-item">第{{ person.generation }}代</span>
+            <span class="meta-sep">·</span>
+            <span class="meta-item">{{ person.hometown }}</span>
           </div>
-          <div class="hero-tags">
-            <span v-for="tag in person.tags" :key="tag" class="tag">{{ tag }}</span>
+          <div class="hero-roles">
+            <span v-for="tag in person.tags" :key="tag" class="role-tag">{{ tag }}</span>
           </div>
-          <p class="hero-brief">{{ person.briefIntro }}</p>
+          <p class="hero-quote">{{ person.briefIntro }}</p>
         </div>
       </div>
     </section>
 
-    <!-- 主要内容区 -->
-    <div class="content-width main-layout">
+    <!-- 主体内容 -->
+    <div class="content-width archive-body">
       <!-- 左侧目录 -->
-      <aside class="sidebar-nav">
-        <nav class="nav-list">
+      <aside class="archive-nav">
+        <nav class="nav-links">
           <a 
             v-for="section in sections" 
             :key="section.id"
             :href="`#${section.id}`"
-            class="nav-item"
+            class="nav-link"
             :class="{ active: activeSection === section.id }"
             @click.prevent="scrollTo(section.id)"
           >
-            <span class="nav-num">{{ section.num }}</span>
-            <span class="nav-label">{{ section.label }}</span>
+            {{ section.label }}
           </a>
         </nav>
       </aside>
 
       <!-- 右侧内容 -->
-      <main class="content-area">
-        <!-- 01 基础信息 -->
-        <section id="basic-info" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">01</span>
-            基础信息
-          </h2>
-          <div class="info-card">
-            <div class="info-grid">
-              <div class="info-item">
-                <span class="info-label">姓名</span>
-                <span class="info-value">{{ person?.name }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">性别</span>
-                <span class="info-value">{{ person?.gender === 'male' ? '男' : '女' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">出生</span>
-                <span class="info-value">{{ person?.birthYear }}年</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">离世</span>
-                <span class="info-value">{{ person?.deathYear ? person.deathYear + '年' : '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">家乡</span>
-                <span class="info-value">{{ person?.hometown }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">世代</span>
-                <span class="info-value">第{{ person?.generation }}代</span>
-              </div>
-              <div class="info-item full-width">
-                <span class="info-label">身份</span>
-                <div class="info-tags">
-                  <span v-for="tag in person?.occupation" :key="tag" class="occ-tag">{{ tag }}</span>
-                </div>
-              </div>
+      <main class="archive-content">
+        
+        <!-- 01 家档案 -->
+        <section id="basic-info" class="archive-section">
+          <h2 class="section-heading">家 档</h2>
+          <div class="archive-table">
+            <div class="table-row">
+              <span class="table-label">姓 名</span>
+              <span class="table-value">{{ person?.name }}</span>
+            </div>
+            <div class="table-row">
+              <span class="table-label">生 卒</span>
+              <span class="table-value">{{ person?.birthYear }}年 — {{ person?.deathYear ? person.deathYear + '年' : '今' }}</span>
+            </div>
+            <div class="table-row">
+              <span class="table-label">籍 贯</span>
+              <span class="table-value">{{ person?.hometown }}</span>
+            </div>
+            <div class="table-row">
+              <span class="table-label">世 代</span>
+              <span class="table-value">第{{ person?.generation }}代</span>
+            </div>
+            <div class="table-row full">
+              <span class="table-label">身 份</span>
+              <span class="table-value table-tags">
+                <span v-for="tag in person?.occupation" :key="tag" class="tag-pill">{{ tag }}</span>
+              </span>
             </div>
           </div>
         </section>
 
-        <!-- 02 家族关系 -->
-        <section id="family" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">02</span>
-            家族关系
-          </h2>
-          <div class="relation-card">
+        <!-- 02 血脉 -->
+        <section id="family" class="archive-section">
+          <h2 class="section-heading">血 脉</h2>
+          <div class="family-tree">
             <!-- 父母 -->
-            <div v-if="person?.parents && person.parents.length > 0" class="relation-group">
-              <h3 class="relation-group-title">父母</h3>
-              <div class="relation-list">
+            <div v-if="person?.parents && person.parents.length > 0" class="tree-branch">
+              <div class="branch-label">父 母</div>
+              <div class="branch-list">
                 <div 
                   v-for="parentId in person.parents" 
                   :key="parentId"
-                  class="relation-person"
+                  class="branch-node"
                   :class="{ clickable: hasPersonDetail(parentId) }"
                   @click="hasPersonDetail(parentId) ? goToPerson(parentId) : showDemoNotice()"
                 >
-                  <div class="relation-avatar" :class="getPersonById(parentId)?.gender">
+                  <div class="node-avatar" :class="getPersonById(parentId)?.gender">
                     {{ getPersonById(parentId)?.name?.charAt(0) || '?' }}
                   </div>
-                  <div class="relation-info">
-                    <div class="relation-name">{{ getPersonById(parentId)?.name || '未命名' }}</div>
-                    <div class="relation-role">父亲 / 母亲</div>
-                  </div>
+                  <div class="node-name">{{ getPersonById(parentId)?.name || '未命名' }}</div>
                 </div>
               </div>
             </div>
 
             <!-- 配偶 -->
-            <div v-if="person?.spouse" class="relation-group">
-              <h3 class="relation-group-title">配偶</h3>
-              <div class="relation-list">
-                <div class="relation-person">
-                  <div class="relation-avatar female">?</div>
-                  <div class="relation-info">
-                    <div class="relation-name">{{ person.spouse }}</div>
-                    <div class="relation-role">配偶</div>
-                  </div>
+            <div v-if="person?.spouse" class="tree-branch">
+              <div class="branch-label">配 偶</div>
+              <div class="branch-list">
+                <div class="branch-node">
+                  <div class="node-avatar female">?</div>
+                  <div class="node-name">{{ person.spouse }}</div>
                 </div>
               </div>
             </div>
 
             <!-- 子女 -->
-            <div v-if="person?.children && person.children.length > 0" class="relation-group">
-              <h3 class="relation-group-title">子女</h3>
-              <div class="relation-list">
+            <div v-if="person?.children && person.children.length > 0" class="tree-branch">
+              <div class="branch-label">子 女</div>
+              <div class="branch-list">
                 <div 
                   v-for="childId in person.children" 
                   :key="childId"
-                  class="relation-person"
-                  :class="{ clickable: hasPersonDetail(childId) }"
+                  class="branch-node clickable"
                   @click="hasPersonDetail(childId) ? goToPerson(childId) : showDemoNotice()"
                 >
-                  <div class="relation-avatar" :class="getPersonById(childId)?.gender">
+                  <div class="node-avatar" :class="getPersonById(childId)?.gender">
                     {{ getPersonById(childId)?.name?.charAt(0) || '?' }}
                   </div>
-                  <div class="relation-info">
-                    <div class="relation-name">{{ getPersonById(childId)?.name || '未命名' }}</div>
-                    <div class="relation-role">第{{ getPersonById(childId)?.generation || '?' }}代</div>
-                  </div>
+                  <div class="node-name">{{ getPersonById(childId)?.name || '未命名' }}</div>
+                  <div class="node-gen">第{{ getPersonById(childId)?.generation }}代</div>
                 </div>
               </div>
             </div>
 
-            <div v-if="!person?.parents && !person?.children" class="empty-relation">
-              暂无家族关系数据
+            <div v-if="!person?.parents && !person?.children" class="empty-state">
+              暂无家族关系记录
             </div>
           </div>
         </section>
 
-        <!-- 03 这一生 / 人生时间轴 -->
-        <section id="timeline" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">03</span>
-            这一生
-          </h2>
-          <div class="timeline">
+        <!-- 03 这一生（视觉核心） -->
+        <section id="timeline" class="archive-section timeline-section">
+          <h2 class="section-heading timeline-heading">这 一 生</h2>
+          <div class="timeline-axis">
             <div 
               v-for="(event, index) in person?.timeline" 
               :key="index"
-              class="timeline-item"
+              class="timeline-event"
             >
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-year">{{ event.year }}</div>
-                <div class="timeline-title">{{ event.title }}</div>
-                <div class="timeline-desc">{{ event.description }}</div>
+              <div class="event-year">{{ event.year }}</div>
+              <div class="event-line"></div>
+              <div class="event-content">
+                <div class="event-title">{{ event.title }}</div>
+                <div class="event-desc">{{ event.description }}</div>
               </div>
             </div>
             <div v-if="!person?.timeline?.length" class="empty-timeline">
@@ -195,75 +175,67 @@
           </div>
         </section>
 
-        <!-- 04 人物故事 -->
-        <section id="story" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">04</span>
-            人物故事
-          </h2>
-          <div class="story-content">
-            <div class="story-text">
-              <p v-for="(para, index) in person?.biography?.split('\n').filter(p => p.trim())" :key="index">
-                {{ para.trim() }}
-              </p>
+        <!-- 04 故事 -->
+        <section id="story" class="archive-section">
+          <h2 class="section-heading">故 事</h2>
+          <div class="story-block">
+            <div 
+              v-for="(para, index) in person?.biography?.split('\n').filter(p => p.trim())" 
+              :key="index"
+              class="story-paragraph"
+            >
+              {{ para.trim() }}
             </div>
-            <div v-if="person?.tags?.length" class="story-tags">
-              <h3>生活中的他</h3>
-              <div class="trait-list">
-                <span v-for="tag in person.tags" :key="tag" class="trait-tag">{{ tag }}</span>
-              </div>
+          </div>
+          <div v-if="person?.tags?.length" class="story-essence">
+            <span class="essence-label">他的样子</span>
+            <div class="essence-tags">
+              <span v-for="tag in person.tags" :key="tag" class="essence-tag">{{ tag }}</span>
             </div>
           </div>
         </section>
 
-        <!-- 05 家族记忆 -->
-        <section id="memories" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">05</span>
-            家族记忆
-          </h2>
-          <div class="memory-grid">
+        <!-- 05 记忆 -->
+        <section id="memories" class="archive-section">
+          <h2 class="section-heading">记 忆</h2>
+          <div class="memory-wall">
             <div 
               v-for="memory in person?.memories" 
               :key="memory.id"
-              class="memory-card"
+              class="memory-piece"
               @click="openMemoryPreview(memory)"
             >
-              <div class="memory-icon" :class="memory.type">
-                <span v-if="memory.type === 'photo'">📷</span>
-                <span v-else-if="memory.type === 'story'">📖</span>
-                <span v-else>🏺</span>
+              <div class="memory-frame" :class="memory.type">
+                <span v-if="memory.type === 'photo'" class="memory-emoji">📷</span>
+                <span v-else-if="memory.type === 'story'" class="memory-emoji">📖</span>
+                <span v-else class="memory-emoji">🏺</span>
               </div>
-              <div class="memory-info">
-                <div class="memory-title">{{ memory.title }}</div>
-                <div class="memory-desc">{{ memory.description }}</div>
-                <div v-if="memory.date" class="memory-date">{{ memory.date }}</div>
+              <div class="memory-caption">
+                <div class="caption-title">{{ memory.title }}</div>
+                <div class="caption-desc">{{ memory.description }}</div>
+                <div v-if="memory.date" class="caption-date">{{ memory.date }}</div>
               </div>
             </div>
             <div v-if="!person?.memories?.length" class="empty-memories">
-              暂无家族记忆
+              暂无家族记忆留存
             </div>
           </div>
         </section>
 
-        <!-- 06 家人眼中的他 -->
-        <section id="recollections" class="content-section">
-          <h2 class="section-title">
-            <span class="section-num">06</span>
-            家人眼中的他
-          </h2>
-          <div class="recollection-list">
+        <!-- 06 家人追忆 -->
+        <section id="recollections" class="archive-section">
+          <h2 class="section-heading">他 在 家 人 眼 中</h2>
+          <div class="recollection-gallery">
             <div 
               v-for="rec in person?.recollections" 
               :key="rec.id"
               class="recollection-card"
             >
-              <div class="recollection-quote">"</div>
               <div class="recollection-content">
                 <p class="recollection-text">{{ rec.content }}</p>
-                <div class="recollection-meta">
-                  <span class="recollection-person">{{ rec.personName }}</span>
-                  <span class="recollection-relation">{{ rec.relation }}</span>
+                <div class="recollection-attribution">
+                  <span class="attribution-person">{{ rec.personName }}</span>
+                  <span class="attribution-relation">{{ rec.relation }}</span>
                 </div>
               </div>
             </div>
@@ -273,65 +245,48 @@
           </div>
         </section>
 
-        <!-- 07 纪念空间 -->
-        <section id="memorial" class="content-section memorial-section">
+        <!-- 07 纪念 -->
+        <section id="memorial" class="archive-section memorial-section">
           <div class="memorial-inner">
-            <h2 class="section-title memorial-title">
-              <span class="section-num">07</span>
-              纪念空间
-            </h2>
-            <div class="memorial-content">
-              <div class="memorial-avatar">
-                <div class="avatar-circle large" :class="person?.gender">
-                  {{ person?.name?.charAt(0) || '?' }}
-                </div>
-              </div>
-              <h3 class="memorial-name">{{ person?.name }}</h3>
-              <p class="memorial-years">{{ person?.birthYear }} — {{ person?.deathYear || '今' }}</p>
-              <p class="memorial-text">
-                愿我们记得他的名字，<br>
-                也记得他认真生活过的一生。
-              </p>
-              <div class="memorial-actions">
-                <button class="memorial-btn primary" disabled>
-                  进入纪念空间
-                </button>
-                <button class="memorial-btn secondary" disabled>
-                  献花
-                </button>
-                <button class="memorial-btn secondary" disabled>
-                  留言
-                </button>
-              </div>
-              <p class="memorial-notice">纪念空间将在后续版本开放</p>
+            <div class="memorial-name">{{ person?.name }}</div>
+            <div class="memorial-years">{{ person?.birthYear }} — {{ person?.deathYear || '今' }}</div>
+            <div class="memorial-divider"></div>
+            <p class="memorial-poem">
+              愿我们记得他的名字，<br>
+              也记得他认真生活过的一生。
+            </p>
+            <div class="memorial-actions">
+              <button class="memorial-btn" disabled>进入纪念空间</button>
+              <button class="memorial-btn ghost" disabled>献花</button>
+              <button class="memorial-btn ghost" disabled>留言</button>
             </div>
+            <p class="memorial-notice">纪念空间将在后续版本开放</p>
           </div>
         </section>
+
       </main>
     </div>
 
-    <!-- 页脚 -->
     <Footer />
 
-    <!-- 图片预览 -->
-    <div v-if="previewMemory" class="memory-preview" @click="closePreview">
-      <div class="preview-content">
-        <div class="preview-icon" :class="previewMemory?.type">
+    <!-- 记忆预览 -->
+    <div v-if="previewMemory" class="memory-overlay" @click="closePreview">
+      <div class="overlay-card" @click.stop>
+        <div class="overlay-icon" :class="previewMemory?.type">
           <span v-if="previewMemory?.type === 'photo'">📷</span>
           <span v-else-if="previewMemory?.type === 'story'">📖</span>
           <span v-else>🏺</span>
         </div>
         <h3>{{ previewMemory?.title }}</h3>
         <p>{{ previewMemory?.description }}</p>
-        <p v-if="previewMemory?.date" class="preview-date">{{ previewMemory?.date }}</p>
+        <p v-if="previewMemory?.date" class="overlay-date">{{ previewMemory?.date }}</p>
+        <button class="overlay-close" @click="closePreview">×</button>
       </div>
     </div>
 
     <!-- Demo 提示 -->
-    <div v-if="demoNotice" class="demo-notice" @click="demoNotice = null">
-      <div class="notice-content">
-        <p>{{ demoNotice }}</p>
-      </div>
+    <div v-if="demoNotice" class="demo-toast" @click="demoNotice = null">
+      <p>{{ demoNotice }}</p>
     </div>
   </div>
 </template>
@@ -358,13 +313,13 @@ const previewMemory = ref<any>(null)
 const demoNotice = ref<string | null>(null)
 
 const sections = [
-  { id: 'basic-info', num: '01', label: '基础信息' },
-  { id: 'family', num: '02', label: '家族关系' },
-  { id: 'timeline', num: '03', label: '这一生' },
-  { id: 'story', num: '04', label: '人物故事' },
-  { id: 'memories', num: '05', label: '家族记忆' },
-  { id: 'recollections', num: '06', label: '家人眼中的他' },
-  { id: 'memorial', num: '07', label: '纪念空间' }
+  { id: 'basic-info', label: '家档' },
+  { id: 'family', label: '血脉' },
+  { id: 'timeline', label: '这一生' },
+  { id: 'story', label: '故事' },
+  { id: 'memories', label: '记忆' },
+  { id: 'recollections', label: '追忆' },
+  { id: 'memorial', label: '纪念' }
 ]
 
 const goBack = () => {
@@ -376,7 +331,7 @@ const goToPerson = (targetPersonId: string) => {
 }
 
 const showDemoNotice = () => {
-  demoNotice.value = '人物详情页将在后续版本建立\n（当前为 Demo 数据）'
+  demoNotice.value = '人物详情页将在后续版本建立（当前为 Demo 数据）'
 }
 
 const scrollTo = (sectionId: string) => {
@@ -394,9 +349,8 @@ const closePreview = () => {
   previewMemory.value = null
 }
 
-// 滚动监听，更新当前激活的章节
 const handleScroll = () => {
-  const scrollY = window.scrollY + 100
+  const scrollY = window.scrollY + 120
   for (let i = sections.length - 1; i >= 0; i--) {
     const el = document.getElementById(sections[i].id)
     if (el && el.offsetTop <= scrollY) {
@@ -416,662 +370,693 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 基础样式 */
-.person-detail-page {
+/* ========== 基础 ========== */
+.person-archive {
   min-height: 100vh;
   background-color: #F9F7F2;
+  font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
 }
 
 .content-width {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 clamp(24px, 4vw, 72px);
+  padding: 0 clamp(20px, 4vw, 56px);
 }
 
-/* 返回按钮 */
-.back-bar {
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #E0D6C8;
-  padding: 12px 0;
+/* ========== 顶部返回 ========== */
+.top-bar {
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid #E8E0D4;
+  padding: 10px 0;
   position: sticky;
   top: 64px;
   z-index: 90;
+  backdrop-filter: blur(8px);
 }
 
-.back-btn {
+.back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 16px;
+  padding: 6px 0;
   background: none;
-  border: 1px solid #E0D6C8;
-  border-radius: 4px;
-  color: #6B5B4F;
-  font-size: 0.875rem;
+  border: none;
+  border-bottom: 1px solid transparent;
+  color: #8B7355;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.2s;
+  font-family: inherit;
 }
 
-.back-btn:hover {
-  background-color: #F9F7F2;
-  border-color: #8D6E63;
+.back-link:hover {
   color: #8D6E63;
+  border-bottom-color: #8D6E63;
 }
 
-/* Hero 区域 */
-.person-hero {
-  background: linear-gradient(180deg, #F9F7F2 0%, #FFFFFF 100%);
-  padding: 48px 0 32px;
+/* ========== Hero 档案封面 ========== */
+.archive-hero {
+  background: linear-gradient(180deg, #F2EDE4 0%, #F9F7F2 100%);
+  padding: 56px 0 48px;
+  border-bottom: 1px solid #E8E0D4;
 }
 
 .hero-inner {
   display: flex;
   align-items: flex-start;
-  gap: 32px;
+  gap: 40px;
 }
 
-.hero-avatar {
+/* 照片框 */
+.hero-photo {
   flex-shrink: 0;
 }
 
-.avatar-circle {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+.photo-frame {
+  width: 140px;
+  height: 170px;
+  background-color: #FFFFFF;
+  border: 1px solid #D4C8B8;
+  padding: 8px;
+  box-shadow: 0 2px 12px rgba(61, 43, 31, 0.08);
+  transform: rotate(-1deg);
+  transition: transform 0.3s ease;
+}
+
+.photo-frame:hover {
+  transform: rotate(0deg) scale(1.02);
+}
+
+.photo-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F0E8;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Noto Serif SC', 'STSong', serif;
-  font-size: 2rem;
-  font-weight: 600;
-  color: #FFFFFF;
-  background-color: #8D6E63;
-  border: 3px solid #E0D6C8;
+  gap: 6px;
+  border: 1px dashed #C9B99A;
 }
 
-.avatar-circle.male {
-  background-color: #8D6E63;
+.photo-label {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: #8B7355;
+  letter-spacing: 2px;
 }
 
-.avatar-circle.female {
-  background-color: #B88A9A;
+.photo-year {
+  font-size: 0.75rem;
+  color: #B8A898;
 }
 
-.avatar-circle.large {
-  width: 120px;
-  height: 120px;
-  font-size: 3rem;
-}
-
-.hero-info {
+/* 文字区 */
+.hero-text {
   flex: 1;
+  padding-top: 12px;
 }
 
 .hero-name {
   font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
   color: #2C1810;
-  margin: 0 0 8px;
+  margin: 0 0 12px;
+  letter-spacing: 4px;
 }
 
-.hero-years {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 12px;
-}
-
-.hero-years span {
-  font-size: 1rem;
-  color: #6B5B4F;
-}
-
-.generation-tag {
-  background-color: #F0E6D3;
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  color: #8B7355;
-}
-
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.hero-line {
+  width: 60px;
+  height: 2px;
+  background-color: #C9A961;
   margin-bottom: 16px;
 }
 
-.tag {
-  padding: 4px 12px;
-  background-color: #F5F0E8;
-  border: 1px solid #E0D6C8;
-  border-radius: 4px;
-  font-size: 0.8125rem;
-  color: #6B5B4F;
-}
-
-.hero-brief {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: #5C4033;
-  margin: 0;
-}
-
-/* 主布局 */
-.main-layout {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 40px;
-  padding-top: 40px;
-  padding-bottom: 60px;
-}
-
-/* 左侧目录 */
-.sidebar-nav {
-  position: sticky;
-  top: 120px;
-  height: fit-content;
-}
-
-.nav-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: #8B7355;
-  font-size: 0.875rem;
-  border-radius: 6px;
-  transition: all 0.2s;
-}
-
-.nav-item:hover {
-  background-color: #F5F0E8;
-  color: #6B5B4F;
-}
-
-.nav-item.active {
-  background-color: #F0E6D3;
-  color: #8D6E63;
-  font-weight: 600;
-}
-
-.nav-num {
-  font-size: 0.75rem;
-  opacity: 0.7;
-}
-
-/* 右侧内容 */
-.content-area {
-  min-width: 0;
-}
-
-.content-section {
-  margin-bottom: 48px;
-}
-
-.section-title {
+.hero-meta {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  color: #6B5B4F;
+}
+
+.meta-sep {
+  color: #C9A961;
+}
+
+.hero-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.role-tag {
+  padding: 4px 14px;
+  background-color: rgba(201, 169, 97, 0.12);
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 2px;
+  font-size: 0.8125rem;
+  color: #8B7355;
+  letter-spacing: 1px;
+}
+
+.hero-quote {
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: #5C4033;
+  margin: 0;
+  padding-left: 16px;
+  border-left: 2px solid #C9A961;
+  font-style: italic;
+}
+
+/* ========== 主体布局 ========== */
+.archive-body {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 32px;
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+/* ========== 左侧目录 ========== */
+.archive-nav {
+  position: sticky;
+  top: 100px;
+  height: fit-content;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-link {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #B8A898;
+  font-size: 0.8125rem;
+  border-radius: 4px;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+  border-left: 2px solid transparent;
+}
+
+.nav-link:hover {
+  color: #8D6E63;
+  background-color: rgba(201, 169, 97, 0.08);
+}
+
+.nav-link.active {
+  color: #8D6E63;
+  background-color: rgba(201, 169, 97, 0.12);
+  border-left-color: #C9A961;
+  font-weight: 600;
+}
+
+/* ========== 章节通用 ========== */
+.archive-section {
+  margin-bottom: 56px;
+}
+
+.section-heading {
   font-family: 'Noto Serif SC', 'STSong', 'SimSun', serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
   color: #3E2723;
   margin: 0 0 24px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #E0D6C8;
-}
-
-.section-num {
-  font-size: 0.875rem;
-  color: #8D6E63;
-  font-weight: 400;
-  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-}
-
-/* 信息卡片 */
-.info-card {
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.05);
-}
-
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-
-.info-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.info-item.full-width {
-  grid-column: 1 / -1;
-}
-
-.info-label {
-  font-size: 0.8125rem;
-  color: #8B7355;
-}
-
-.info-value {
-  font-size: 1rem;
-  color: #3E2723;
-}
-
-.occ-tag {
-  display: inline-block;
-  padding: 4px 12px;
-  background-color: #F5F0E8;
-  border: 1px solid #E0D6C8;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  color: #6B5B4F;
-  margin-right: 8px;
-}
-
-/* 关系卡片 */
-.relation-card {
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.05);
-}
-
-.relation-group {
-  margin-bottom: 24px;
-}
-
-.relation-group:last-child {
-  margin-bottom: 0;
-}
-
-.relation-group-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #3E2723;
-  margin: 0 0 16px;
-  padding-bottom: 8px;
   border-bottom: 1px solid #E0D6C8;
+  letter-spacing: 6px;
 }
 
-.relation-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
+.timeline-heading {
+  font-size: 1.5rem;
+  letter-spacing: 10px;
 }
 
-.relation-person {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: #F9F7F2;
-  border-radius: 8px;
-  transition: all 0.2s;
+/* ========== 家档（基础信息） ========== */
+.archive-table {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E0D4;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-.relation-person.clickable {
-  cursor: pointer;
+.table-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  border-bottom: 1px solid #F0E8D8;
 }
 
-.relation-person.clickable:hover {
-  background-color: #F0E6D3;
-  transform: translateY(-2px);
+.table-row:last-child {
+  border-bottom: none;
 }
 
-.relation-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1.125rem;
-  color: #FFFFFF;
-  background-color: #8D6E63;
-  flex-shrink: 0;
+.table-row.full {
+  grid-template-columns: 100px 1fr;
 }
 
-.relation-avatar.female {
-  background-color: #B88A9A;
-}
-
-.relation-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.relation-name {
-  font-weight: 600;
-  color: #3E2723;
-  font-size: 0.9375rem;
-}
-
-.relation-role {
-  font-size: 0.8125rem;
+.table-label {
+  padding: 14px 20px;
+  font-size: 0.875rem;
   color: #8B7355;
-}
-
-.empty-relation {
-  color: #8B7355;
-  font-style: italic;
-  padding: 16px;
+  background-color: #FAFAF5;
+  border-right: 1px solid #F0E8D8;
   text-align: center;
+  letter-spacing: 4px;
+  font-weight: 500;
 }
 
-/* 时间轴 */
-.timeline {
-  position: relative;
-  padding-left: 32px;
-}
-
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 8px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: #E0D6C8;
-}
-
-.timeline-item {
-  position: relative;
-  padding-bottom: 24px;
-}
-
-.timeline-item:last-child {
-  padding-bottom: 0;
-}
-
-.timeline-dot {
-  position: absolute;
-  left: -28px;
-  top: 4px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #8D6E63;
-  border: 2px solid #F9F7F2;
-}
-
-.timeline-content {
-  display: flex;
-  gap: 16px;
-}
-
-.timeline-year {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #8D6E63;
-  min-width: 60px;
-  padding-top: 2px;
-}
-
-.timeline-title {
-  font-weight: 600;
+.table-value {
+  padding: 14px 20px;
+  font-size: 1rem;
   color: #3E2723;
-  margin-bottom: 4px;
-}
-
-.timeline-desc {
-  font-size: 0.9375rem;
-  color: #5C4033;
   line-height: 1.6;
 }
 
-.empty-timeline {
-  color: #8B7355;
-  font-style: italic;
-  padding: 16px;
-  text-align: center;
-}
-
-/* 人物故事 */
-.story-content {
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.05);
-}
-
-.story-text {
-  margin-bottom: 24px;
-}
-
-.story-text p {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #5C4033;
-  margin: 0 0 16px;
-  text-indent: 2em;
-}
-
-.story-text p:last-child {
-  margin-bottom: 0;
-}
-
-.story-tags h3 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #3E2723;
-  margin: 0 0 12px;
-}
-
-.trait-list {
+.table-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.trait-tag {
-  padding: 6px 16px;
+.tag-pill {
+  padding: 3px 12px;
   background-color: #F5F0E8;
   border: 1px solid #E0D6C8;
-  border-radius: 20px;
-  font-size: 0.875rem;
+  border-radius: 2px;
+  font-size: 0.8125rem;
   color: #6B5B4F;
 }
 
-/* 家族记忆 */
-.memory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.memory-card {
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.05);
-  cursor: pointer;
-  transition: all 0.2s;
+/* ========== 血脉（家族关系） ========== */
+.family-tree {
   display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tree-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.branch-label {
+  font-size: 0.8125rem;
+  color: #8B7355;
+  letter-spacing: 2px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed #E0D6C8;
+}
+
+.branch-list {
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
-  align-items: flex-start;
 }
 
-.memory-card:hover {
+.branch-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E8E0D4;
+  border-radius: 4px;
+  cursor: default;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+.branch-node.clickable {
+  cursor: pointer;
+}
+
+.branch-node.clickable:hover {
+  border-color: #C9A961;
+  background-color: #FFFCF5;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(61, 43, 31, 0.1);
+  box-shadow: 0 4px 12px rgba(201, 169, 97, 0.15);
 }
 
-.memory-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
+.node-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  flex-shrink: 0;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.25rem;
+  color: #FFFFFF;
+  background-color: #8D6E63;
 }
 
-.memory-icon.photo {
-  background-color: #E8F5E9;
+.node-avatar.female {
+  background-color: #B88A9A;
 }
 
-.memory-icon.story {
+.node-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #3E2723;
+  text-align: center;
+}
+
+.node-gen {
+  font-size: 0.75rem;
+  color: #8B7355;
+}
+
+.empty-state {
+  color: #B8A898;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ========== 这一生（时间轴 - 视觉核心） ========== */
+.timeline-axis {
+  position: relative;
+  padding-left: 48px;
+}
+
+.timeline-axis::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #C9A961 0%, #E0D6C8 100%);
+}
+
+.timeline-event {
+  position: relative;
+  padding-bottom: 32px;
+}
+
+.timeline-event:last-child {
+  padding-bottom: 0;
+}
+
+.event-year {
+  position: absolute;
+  left: -48px;
+  width: 36px;
+  text-align: right;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #C9A961;
+  padding-top: 4px;
+}
+
+.event-line {
+  position: absolute;
+  left: -36px;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #C9A961;
+  border: 2px solid #F9F7F2;
+  box-shadow: 0 0 0 2px #C9A961;
+}
+
+.event-content {
+  padding-left: 16px;
+}
+
+.event-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #3E2723;
+  margin-bottom: 6px;
+}
+
+.event-desc {
+  font-size: 0.9375rem;
+  color: #6B5B4F;
+  line-height: 1.7;
+}
+
+.empty-timeline {
+  color: #B8A898;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+}
+
+/* ========== 故事 ========== */
+.story-block {
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  padding: 28px 32px;
+  border: 1px solid #E8E0D4;
+}
+
+.story-paragraph {
+  font-size: 1rem;
+  line-height: 2;
+  color: #4A3B32;
+  margin: 0 0 16px;
+  text-indent: 2em;
+}
+
+.story-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.story-essence {
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.essence-label {
+  font-size: 0.875rem;
+  color: #8B7355;
+  letter-spacing: 2px;
+}
+
+.essence-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.essence-tag {
+  padding: 4px 16px;
+  background-color: #F5F0E8;
+  border: 1px solid #E0D6C8;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  color: #6B5B4F;
+  letter-spacing: 1px;
+}
+
+/* ========== 记忆 ========== */
+.memory-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.memory-piece {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E0D4;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.memory-piece:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(61, 43, 31, 0.1);
+  border-color: #C9A961;
+}
+
+.memory-frame {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  background-color: #F9F7F2;
+  border-bottom: 1px solid #E8E0D4;
+}
+
+.memory-frame.photo {
+  background-color: #F0F5E8;
+}
+
+.memory-frame.story {
   background-color: #FFF8E7;
 }
 
-.memory-icon.object {
-  background-color: #F0E6D3;
+.memory-frame.object {
+  background-color: #F5F0E8;
 }
 
-.memory-info {
-  flex: 1;
-  min-width: 0;
+.memory-caption {
+  padding: 14px 16px;
 }
 
-.memory-title {
+.caption-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: #3E2723;
-  font-size: 0.9375rem;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
-.memory-desc {
-  font-size: 0.875rem;
+.caption-desc {
+  font-size: 0.8125rem;
   color: #6B5B4F;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 8px;
 }
 
-.memory-date {
-  font-size: 0.8125rem;
-  color: #8B7355;
+.caption-date {
+  font-size: 0.75rem;
+  color: #B8A898;
 }
 
 .empty-memories {
   grid-column: 1 / -1;
-  color: #8B7355;
+  color: #B8A898;
   font-style: italic;
-  padding: 16px;
+  padding: 20px;
   text-align: center;
 }
 
-/* 家人追忆 */
-.recollection-list {
+/* ========== 家人追忆 ========== */
+.recollection-gallery {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .recollection-card {
   background-color: #FFFFFF;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(61, 43, 31, 0.05);
-  display: flex;
-  gap: 16px;
-}
-
-.recollection-quote {
-  font-size: 3rem;
-  line-height: 1;
-  color: #C9A961;
-  font-family: Georgia, serif;
-  flex-shrink: 0;
-}
-
-.recollection-content {
-  flex: 1;
+  border-left: 3px solid #C9A961;
+  padding: 24px 28px;
+  border-radius: 0 4px 4px 0;
 }
 
 .recollection-text {
-  font-size: 1rem;
-  line-height: 1.7;
-  color: #5C4033;
-  margin: 0 0 12px;
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  color: #4A3B32;
+  margin: 0 0 16px;
   font-style: italic;
+  position: relative;
+  padding-left: 20px;
 }
 
-.recollection-meta {
+.recollection-text::before {
+  content: '"';
+  position: absolute;
+  left: 0;
+  top: -8px;
+  font-size: 2.5rem;
+  color: #C9A961;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+.recollection-attribution {
   display: flex;
-  gap: 12px;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 20px;
 }
 
-.recollection-person {
+.attribution-person {
+  font-size: 0.9375rem;
   font-weight: 600;
   color: #3E2723;
 }
 
-.recollection-relation {
-  font-size: 0.875rem;
+.attribution-relation {
+  font-size: 0.8125rem;
   color: #8B7355;
-  padding: 2px 8px;
-  background-color: #F5F0E8;
-  border-radius: 4px;
 }
 
 .empty-recollections {
-  color: #8B7355;
+  color: #B8A898;
   font-style: italic;
-  padding: 16px;
+  padding: 20px;
   text-align: center;
 }
 
-/* 纪念空间 */
+/* ========== 纪念空间 ========== */
 .memorial-section {
-  margin-top: 60px;
+  margin-top: 20px;
 }
 
 .memorial-inner {
-  background: linear-gradient(135deg, #F9F7F2 0%, #F5F0E8 100%);
-  border-radius: 16px;
-  padding: 48px;
+  background: linear-gradient(135deg, #2C1810 0%, #3E2723 50%, #2C1810 100%);
+  border-radius: 8px;
+  padding: 56px 40px;
   text-align: center;
-  border: 1px solid #E0D6C8;
+  color: #F5F0E8;
+  position: relative;
+  overflow: hidden;
 }
 
-.memorial-title {
-  justify-content: center;
-  border-bottom: none;
-  margin-bottom: 32px;
-}
-
-.memorial-content {
-  max-width: 480px;
-  margin: 0 auto;
+.memorial-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(201, 169, 97, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .memorial-name {
   font-family: 'Noto Serif SC', 'STSong', serif;
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #2C1810;
-  margin: 16px 0 8px;
+  color: #F5F0E8;
+  margin: 0 0 8px;
+  letter-spacing: 6px;
+  position: relative;
 }
 
 .memorial-years {
   font-size: 1rem;
-  color: #8B7355;
-  margin-bottom: 16px;
+  color: #C9A961;
+  margin-bottom: 24px;
+  position: relative;
 }
 
-.memorial-text {
-  font-size: 1rem;
-  line-height: 1.8;
-  color: #5C4033;
-  margin-bottom: 32px;
+.memorial-divider {
+  width: 60px;
+  height: 1px;
+  background-color: #C9A961;
+  margin: 0 auto 24px;
+  position: relative;
+}
+
+.memorial-poem {
+  font-size: 1.0625rem;
+  line-height: 2;
+  color: #E8DCC8;
+  margin: 0 0 32px;
+  position: relative;
 }
 
 .memorial-actions {
@@ -1079,128 +1064,158 @@ onUnmounted(() => {
   justify-content: center;
   gap: 16px;
   margin-bottom: 16px;
+  position: relative;
 }
 
 .memorial-btn {
-  padding: 12px 32px;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 10px 28px;
+  border-radius: 4px;
+  font-size: 0.9375rem;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
+  font-family: inherit;
 }
 
-.memorial-btn.primary {
-  background-color: #8D6E63;
-  color: #FFFFFF;
-}
-
-.memorial-btn.primary:disabled {
+.memorial-btn {
   background-color: #C9A961;
-  cursor: not-allowed;
+  color: #2C1810;
 }
 
-.memorial-btn.secondary {
-  background-color: #FFFFFF;
-  color: #8D6E63;
-  border: 1px solid #8D6E63;
-}
-
-.memorial-btn.secondary:disabled {
+.memorial-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.memorial-notice {
-  font-size: 0.875rem;
-  color: #8B7355;
-  font-style: italic;
+.memorial-btn.ghost {
+  background: transparent;
+  color: #C9A961;
+  border: 1px solid #C9A961;
 }
 
-/* 图片预览 */
-.memory-preview {
+.memorial-btn.ghost:disabled {
+  opacity: 0.4;
+}
+
+.memorial-notice {
+  font-size: 0.8125rem;
+  color: #8B7355;
+  position: relative;
+}
+
+/* ========== 预览弹窗 ========== */
+.memory-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: rgba(44, 24, 16, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 200;
   cursor: pointer;
+  backdrop-filter: blur(4px);
 }
 
-.preview-content {
-  background-color: #FFFFFF;
-  border-radius: 12px;
+.overlay-card {
+  background-color: #F9F7F2;
+  border-radius: 8px;
   padding: 32px;
-  max-width: 400px;
+  max-width: 380px;
   text-align: center;
+  position: relative;
+  border: 1px solid #E0D6C8;
 }
 
-.preview-icon {
-  width: 80px;
-  height: 80px;
+.overlay-icon {
+  width: 72px;
+  height: 72px;
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 0 auto 16px;
 }
 
-.preview-icon.photo {
-  background-color: #E8F5E9;
+.overlay-icon.photo {
+  background-color: #F0F5E8;
 }
 
-.preview-icon.story {
+.overlay-icon.story {
   background-color: #FFF8E7;
 }
 
-.preview-icon.object {
-  background-color: #F0E6D3;
+.overlay-icon.object {
+  background-color: #F5F0E8;
 }
 
-.preview-content h3 {
-  font-size: 1.25rem;
+.overlay-card h3 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.125rem;
   color: #3E2723;
   margin: 0 0 8px;
 }
 
-.preview-content p {
+.overlay-card p {
   font-size: 0.9375rem;
   color: #6B5B4F;
   line-height: 1.6;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
 }
 
-.preview-date {
-  font-size: 0.875rem;
+.overlay-date {
+  font-size: 0.8125rem;
+  color: #B8A898;
+  margin-bottom: 16px;
+}
+
+.overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #E0D6C8;
+  background: #FFFFFF;
   color: #8B7355;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
-/* Demo 提示 */
-.demo-notice {
+.overlay-close:hover {
+  background: #F5F0E8;
+  color: #3E2723;
+}
+
+/* ========== Demo 提示 ========== */
+.demo-toast {
   position: fixed;
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #3E2723;
-  color: #FFFFFF;
-  padding: 16px 24px;
-  border-radius: 8px;
-  font-size: 0.9375rem;
+  background-color: #2C1810;
+  color: #F5F0E8;
+  padding: 14px 24px;
+  border-radius: 6px;
+  font-size: 0.875rem;
   line-height: 1.6;
   z-index: 200;
   cursor: pointer;
-  max-width: 320px;
+  max-width: 300px;
   text-align: center;
+  box-shadow: 0 4px 16px rgba(44, 24, 16, 0.3);
 }
 
-/* 响应式 */
+/* ========== 响应式 ========== */
 @media (max-width: 1024px) {
-  .main-layout {
-    grid-template-columns: 160px 1fr;
-    gap: 24px;
+  .archive-body {
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
   }
 }
 
@@ -1209,50 +1224,92 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 24px;
   }
 
-  .hero-tags {
+  .hero-name {
+    font-size: 2.25rem;
+  }
+
+  .hero-meta {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-roles {
     justify-content: center;
   }
 
-  .main-layout {
+  .hero-quote {
+    text-align: left;
+  }
+
+  .archive-body {
     grid-template-columns: 1fr;
   }
 
-  .sidebar-nav {
+  .archive-nav {
     position: static;
     order: -1;
   }
 
-  .nav-list {
+  .nav-links {
     flex-direction: row;
     overflow-x: auto;
     padding-bottom: 8px;
-    gap: 8px;
+    gap: 4px;
   }
 
-  .nav-item {
+  .nav-link {
     white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 0.75rem;
   }
 
-  .info-grid {
-    grid-template-columns: 1fr;
+  .table-row {
+    grid-template-columns: 80px 1fr;
   }
 
-  .memory-grid {
-    grid-template-columns: 1fr;
+  .table-label {
+    letter-spacing: 2px;
+    padding: 12px 16px;
+  }
+
+  .timeline-axis {
+    padding-left: 36px;
+  }
+
+  .event-year {
+    left: -36px;
+    width: 28px;
+    font-size: 0.875rem;
+  }
+
+  .event-line {
+    left: -28px;
   }
 
   .memorial-inner {
-    padding: 32px 20px;
+    padding: 36px 20px;
+  }
+
+  .memorial-name {
+    font-size: 1.5rem;
+    letter-spacing: 4px;
   }
 
   .memorial-actions {
     flex-direction: column;
+    align-items: center;
   }
 
   .memorial-btn {
     width: 100%;
+    max-width: 200px;
+  }
+
+  .memory-wall {
+    grid-template-columns: 1fr;
   }
 }
 </style>
