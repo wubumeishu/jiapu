@@ -257,11 +257,18 @@
               也记得他认真生活过的一生。
             </p>
             <div class="memorial-actions">
-              <button class="memorial-btn" disabled>进入纪念空间</button>
-              <button class="memorial-btn ghost" disabled>献花</button>
-              <button class="memorial-btn ghost" disabled>留言</button>
+              <router-link 
+                v-if="person?.deathYear"
+                :to="`/surname/${slug}/genealogy/${genealogyId}/member/${personId}/memorial`"
+                class="memorial-btn"
+              >
+                进入纪念空间
+              </router-link>
+              <button v-else class="memorial-btn" disabled>进入纪念空间</button>
+              <button class="memorial-btn ghost" @click="showToast('献花功能即将开放')">献花</button>
+              <button class="memorial-btn ghost" @click="showToast('留言功能即将开放')">留言</button>
             </div>
-            <p class="memorial-notice">纪念空间将在后续版本开放</p>
+            <p class="memorial-notice" v-if="!person?.deathYear">纪念空间将在后续版本开放</p>
           </div>
         </section>
 
@@ -333,6 +340,10 @@ const goToPerson = (targetPersonId: string) => {
 
 const showDemoNotice = () => {
   demoNotice.value = '人物详情页将在后续版本建立（当前为 Demo 数据）'
+}
+
+const showToast = (message: string) => {
+  demoNotice.value = message
 }
 
 const scrollTo = (sectionId: string) => {
