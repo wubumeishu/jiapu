@@ -9,9 +9,8 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
-          返回{{ surnameData?.name || '家谱' }}
+          返回人物档案
         </button>
-        <span class="demo-badge">纪念空间 · 演示数据</span>
       </div>
     </div>
 
@@ -44,59 +43,117 @@
       </div>
     </section>
 
-    <!-- 追思核心区域 -->
-    <div class="content-width memorial-body">
-      <!-- 祭祀互动按钮 -->
-      <section class="action-section">
-        <div class="action-buttons">
+    <!-- 祭祀互动核心区域 -->
+    <section class="worship-section">
+      <div class="worship-inner">
+        <!-- 香炉与供奉 -->
+        <div class="worship-altar">
+          <div class="incense-burner">
+            <svg class="incense-svg" viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- 香炉底座 -->
+              <path d="M30 60H90V70C90 72.2091 88.2091 74 86 74H34C31.7909 74 30 72.2091 30 70V60Z" fill="#8D6E63" opacity="0.6"/>
+              <!-- 香炉主体 -->
+              <path d="M25 45H95V60H25V45Z" fill="#8D6E63" opacity="0.7"/>
+              <!-- 香炉口 -->
+              <ellipse cx="60" cy="45" rx="35" ry="8" fill="#6B5B4F" opacity="0.8"/>
+              <!-- 香 -->
+              <line x1="60" y1="37" x2="60" y2="15" stroke="#C9A961" stroke-width="2" stroke-linecap="round"/>
+              <!-- 香的顶端（红色） -->
+              <circle cx="60" cy="15" r="2" fill="#C9A961" opacity="0.9"/>
+              <!-- 烟雾 -->
+              <path d="M60 15C55 10 65 5 60 0" stroke="#E8DCC8" stroke-width="1" fill="none" opacity="0.5">
+                <animate attributeName="d" values="M60 15C55 10 65 5 60 0;M60 15C65 10 55 5 60 0;M60 15C55 10 65 5 60 0" dur="3s" repeatCount="indefinite"/>
+              </path>
+              <path d="M55 18C50 12 60 8 55 3" stroke="#E8DCC8" stroke-width="0.8" fill="none" opacity="0.4">
+                <animate attributeName="d" values="M55 18C50 12 60 8 55 3;M55 18C60 12 50 8 55 3;M55 18C50 12 60 8 55 3" dur="4s" repeatCount="indefinite"/>
+              </path>
+            </svg>
+          </div>
+          
+          <!-- 供奉状态指示 -->
+          <div class="offering-status">
+            <div class="offering-item" :class="{ active: lampLit }">
+              <span class="offering-icon">🕯️</span>
+              <span class="offering-label">{{ lampLit ? '明灯长燃' : '未点灯' }}</span>
+            </div>
+            <div class="offering-item" :class="{ active: teaOffered }">
+              <span class="offering-icon">🍵</span>
+              <span class="offering-label">{{ teaOffered ? '清茶供奉' : '未敬茶' }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 祭祀操作按钮 -->
+        <div class="worship-actions">
           <button 
-            class="action-btn" 
-            :class="{ active: flowerCount > 0 }"
+            class="worship-btn" 
+            :class="{ 'active': flowerCount > 0 }"
             @click="offerFlowers"
           >
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="12" cy="10" r="2.2"/>
-              <path d="M12 8c-4-6-8 1-3 3-5 2 1 7 3 2 2 5 8 0 3-2 5-2 1-9-3-3Z"/>
-              <path d="M12 12v8M9 20h6"/>
-            </svg>
-            <span class="btn-label">献花</span>
+            <div class="btn-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="10" r="2.2"/>
+                <path d="M12 8c-4-6-8 1-3 3-5 2 1 7 3 2 2 5 8 0 3-2 5-2 1-9-3-3Z"/>
+                <path d="M12 12v8M9 20h6"/>
+              </svg>
+            </div>
+            <span class="btn-text">献花</span>
             <span v-if="flowerCount > 0" class="btn-count">{{ flowerCount }}</span>
           </button>
           
-          <button class="action-btn" @click="lightLamp">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M8 8h8M7 10h10l-1 8H8l-1-8ZM9 20h6M10 5h4M11 2h2v3h-2z"/>
-            </svg>
-            <span class="btn-label">点灯</span>
+          <button 
+            class="worship-btn" 
+            :class="{ 'active': lampLit }"
+            @click="lightLamp"
+          >
+            <div class="btn-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 8h8M7 10h10l-1 8H8l-1-8ZM9 20h6M10 5h4M11 2h2v3h-2z"/>
+              </svg>
+            </div>
+            <span class="btn-text">点灯</span>
           </button>
           
-          <button class="action-btn" @click="offerTea">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M5 20h14M7 17h10M8 17V9h8v8M5 9l7-5 7 5"/>
-              <path d="M10 13h4"/>
-            </svg>
-            <span class="btn-label">敬茶</span>
+          <button 
+            class="worship-btn" 
+            :class="{ 'active': teaOffered }"
+            @click="offerTea"
+          >
+            <div class="btn-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M5 20h14M7 17h10M8 17V9h8v8M5 9l7-5 7 5"/>
+                <path d="M10 13h4"/>
+              </svg>
+            </div>
+            <span class="btn-text">敬茶</span>
           </button>
           
-          <button class="action-btn primary" @click="openMessageModal">
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <circle cx="9" cy="9" r="3"/>
-              <circle cx="17" cy="11" r="2.5"/>
-              <path d="M3.5 20c.6-3.3 2.5-5 5.5-5s4.9 1.7 5.5 5M14 16c2.7-.1 4.8 1.1 5.5 4"/>
-            </svg>
-            <span class="btn-label">留言</span>
+          <button class="worship-btn primary" @click="openMessageModal">
+            <div class="btn-icon-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="9" cy="9" r="3"/>
+                <circle cx="17" cy="11" r="2.5"/>
+                <path d="M3.5 20c.6-3.3 2.5-5 5.5-5s4.9 1.7 5.5 5M14 16c2.7-.1 4.8 1.1 5.5 4"/>
+              </svg>
+            </div>
+            <span class="btn-text">留言</span>
           </button>
         </div>
         
-        <!-- 献花展示区域 -->
-        <div class="flower-display" v-if="flowerCount > 0">
-          <div class="flowers-row">
-            <span v-for="n in Math.min(flowerCount, 12)" :key="n" class="flower">🌸</span>
+        <!-- 花束展示区域 -->
+        <div class="flower-offering" v-if="flowerCount > 0">
+          <div class="flower-vase">
+            <div class="flowers">
+              <span v-for="(_, i) in Math.min(flowerCount, 15)" :key="i" class="flower" :class="`flower-${i % 5}`">🌸</span>
+            </div>
+            <div class="flower-count-text">共献 {{ flowerCount }} 束鲜花</div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Tab 导航 -->
+    <!-- Tab 导航 -->
+    <div class="content-width">
       <div class="tabs">
         <button 
           v-for="tab in tabs" 
@@ -294,7 +351,6 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import { getPersonData } from '@/data/persons'
-import { getSurnameData } from '@/data/surnames'
 
 const route = useRoute()
 const router = useRouter()
@@ -304,11 +360,12 @@ const slug = route.params.slug as string
 const genealogyId = route.params.genealogyId as string
 
 const person = ref(getPersonData(personId))
-const surnameData = getSurnameData(slug)
 
 // 状态管理
 const activeTab = ref('life')
 const flowerCount = ref(0)
+const lampLit = ref(false)  // 点灯状态
+const teaOffered = ref(false)  // 敬茶状态
 const showMessageModal = ref(false)
 const toastMessage = ref<string | null>(null)
 
@@ -325,7 +382,7 @@ const visitors = ref([
   { id: 3, name: '陈秀兰', gender: 'female' },
   { id: 4, name: '陈有禄', gender: 'male' },
   { id: 5, name: '陈明远', gender: 'male' }
-])
+]) // 保留数据，暂时隐藏
 
 // 新留言表单
 const newMessage = ref({
@@ -333,34 +390,43 @@ const newMessage = ref({
   content: ''
 })
 
-// 标签页定义
+// 标签页定义（隐藏家人来访）
 const tabs = [
   { id: 'life', label: '生平简介' },
   { id: 'memory', label: '家族追忆' },
   { id: 'message', label: '纪念留言' },
-  { id: 'memories', label: '记忆收藏' },
-  { id: 'visitors', label: '家人来访' }
+  { id: 'memories', label: '记忆收藏' }
 ]
 
-// 返回首页
+// 返回首页（返回人物详情页）
 const goBack = () => {
-  router.push(`/surname/${slug}/genealogy/${genealogyId}`)
+  router.push(`/surname/${slug}/genealogy/${genealogyId}/member/${personId}`)
 }
 
 // 献花交互
 const offerFlowers = () => {
   flowerCount.value++
-  showToast('已献上一束鲜花 🌸')
+  showToast(`已献上一束鲜花，共 ${flowerCount.value} 束`)
 }
 
 // 点灯交互
 const lightLamp = () => {
-  showToast('已为您点亮一盏明灯 🕯️')
+  if (!lampLit.value) {
+    lampLit.value = true
+    showToast('已为您点亮一盏明灯 🕯️')
+  } else {
+    showToast('明灯已为您长燃')
+  }
 }
 
 // 敬茶交互
 const offerTea = () => {
-  showToast('已敬上一杯清茶 🍵')
+  if (!teaOffered.value) {
+    teaOffered.value = true
+    showToast('已敬上一杯清茶 🍵')
+  } else {
+    showToast('清茶已供奉')
+  }
 }
 
 // 打开留言弹窗
@@ -587,77 +653,170 @@ onMounted(() => {
   font-style: italic;
 }
 
-/* ========== 主体布局 ========== */
-.memorial-body {
-  padding-top: 40px;
-  padding-bottom: 80px;
+/* ========== 祭祀互动核心区域 ========== */
+.worship-section {
+  margin-bottom: 40px;
+  padding: 40px 0;
+  background: linear-gradient(180deg, #F9F7F2 0%, #F2EDE4 100%);
+  border-top: 1px solid #E8E0D4;
+  border-bottom: 1px solid #E8E0D4;
 }
 
-/* ========== 祭祀互动按钮 ========== */
-.action-section {
+.worship-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 香炉与供奉 */
+.worship-altar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
   margin-bottom: 32px;
 }
 
-.action-buttons {
+.incense-burner {
+  width: 120px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.incense-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 供奉状态指示 */
+.offering-status {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.offering-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid #E8E0D4;
+  transition: all 0.3s ease;
+}
+
+.offering-item.active {
+  border-color: #C9A961;
+  background-color: rgba(201, 169, 97, 0.05);
+  box-shadow: 0 2px 8px rgba(201, 169, 97, 0.1);
+}
+
+.offering-icon {
+  font-size: 1.5rem;
+}
+
+.offering-label {
+  font-size: 0.875rem;
+  color: #8B7355;
+  letter-spacing: 1px;
+}
+
+.offering-item.active .offering-label {
+  color: #8D6E63;
+  font-weight: 500;
+}
+
+/* 祭祀操作按钮 */
+.worship-actions {
   display: flex;
   gap: 16px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
-.action-btn {
+.worship-btn {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
+  gap: 10px;
+  padding: 20px 28px;
   background-color: #FFFFFF;
   border: 1.5px solid #E8E0D4;
-  border-radius: 8px;
-  font-size: 0.9375rem;
-  color: #5C4033;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
   font-family: inherit;
+  min-width: 100px;
   position: relative;
   overflow: hidden;
 }
 
-.action-btn:hover {
+.worship-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.worship-btn:hover::before {
+  opacity: 1;
+}
+
+.worship-btn:hover {
   border-color: #C9A961;
-  color: #8D6E63;
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(201, 169, 97, 0.15);
 }
 
-.action-btn.active {
+.worship-btn.active {
   border-color: #C9A961;
   background-color: rgba(201, 169, 97, 0.08);
-  color: #8D6E63;
 }
 
-.action-btn.primary {
+.worship-btn.primary {
   background-color: #8D6E63;
   border-color: #8D6E63;
   color: #FFFFFF;
 }
 
-.action-btn.primary:hover {
+.worship-btn.primary:hover {
   background-color: #7A5C56;
   border-color: #7A5C56;
 }
 
-.btn-icon {
-  width: 20px;
-  height: 20px;
+.btn-icon-wrap {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn-label {
+.btn-icon-wrap svg {
+  width: 100%;
+  height: 100%;
+}
+
+.btn-text {
+  font-size: 0.9375rem;
   font-weight: 500;
+  color: #5C4033;
+  letter-spacing: 1px;
+}
+
+.worship-btn.primary .btn-text {
+  color: #FFFFFF;
 }
 
 .btn-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
   min-width: 20px;
   height: 20px;
   padding: 0 6px;
@@ -666,23 +825,62 @@ onMounted(() => {
   border-radius: 10px;
   font-size: 0.75rem;
   font-weight: 600;
-  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* 献花展示 */
-.flower-display {
-  margin-top: 20px;
-  padding: 16px 20px;
-  background-color: rgba(201, 169, 97, 0.06);
-  border-radius: 8px;
+/* 花束展示区域 */
+.flower-offering {
+  margin-top: 32px;
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
   border: 1px dashed #C9A961;
+  text-align: center;
 }
 
-.flowers-row {
+.flower-vase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.flowers {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 1.5rem;
+  justify-content: center;
+  gap: 12px;
+  font-size: 2rem;
+  max-width: 400px;
+}
+
+.flower {
+  display: inline-block;
+  animation: bloom 0.5s ease-out forwards;
+  opacity: 0;
+  transform: scale(0);
+}
+
+.flower-0 { animation-delay: 0s; }
+.flower-1 { animation-delay: 0.05s; }
+.flower-2 { animation-delay: 0.1s; }
+.flower-3 { animation-delay: 0.15s; }
+.flower-4 { animation-delay: 0.2s; }
+
+@keyframes bloom {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.flower-count-text {
+  font-size: 0.875rem;
+  color: #8B7355;
+  letter-spacing: 1px;
+  font-family: 'Noto Serif SC', serif;
 }
 
 /* ========== Tab 导航 ========== */
